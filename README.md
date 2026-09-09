@@ -4,7 +4,7 @@
 
 ## 현재 상태
 
-웹앱과 Android APK 소스, Gmail 연동 코드가 구현되어 있습니다. GitHub Actions의 Android unit test와 installable debug APK 빌드는 `main` 커밋에서 검증되었습니다. Google 계정 로그인, Gmail OAuth 승인, 실제 Gmail 발송은 아직 검증하지 않았습니다. 로컬 미리보기와 테스트 초안 경로는 이메일을 보내지 않습니다.
+웹앱과 네이티브 Android 앱, Gmail 연동 코드가 구현되어 있습니다. GitHub Actions는 개발용 `debug APK`와 직접 배포용 서명 `release APK`를 각각 artifact로 만듭니다. `release APK`를 만들려면 아래 안내대로 한 번만 keystore를 만들고 GitHub Secrets를 설정해야 합니다. Google 계정 로그인, Gmail OAuth 승인, 실제 Gmail 발송은 아직 자동 검증하지 않았습니다. 로컬 미리보기와 테스트 초안 경로는 이메일을 보내지 않습니다.
 
 ## 실행
 
@@ -22,33 +22,73 @@ npm run preview
 
 Android 휴대폰에서 사용하려면 설치 안내대로 Apps Script 웹앱을 배포한 뒤 생성된 웹앱 URL을 Android Chrome에서 엽니다. 로컬 `127.0.0.1` 주소는 휴대폰에서 열 수 없습니다.
 
-## Android APK와 GitHub Actions
+## Android APK 배포
 
-`android/`에 네이티브 APK 프로젝트가 있습니다. 저장소를 GitHub에 올린 뒤 **Actions → Build Android APK → Run workflow**를 실행하면 `expense-mail-debug-apk` 아티팩트에서 설치 가능한 debug APK를 내려받을 수 있습니다. Android 설정에서 해당 APK 설치를 허용한 뒤 열어 주세요.
+`android/`에 네이티브 Android 앱이 있습니다. 개발 중에는 debug APK를 사용할 수 있고, 다른 사람에게 전달할 때는 서명된 release APK를 사용합니다. release APK는 GitHub Actions가 빌드하며, 결과는 `expense-mail-release-apk` artifact의 `app-release.apk`입니다.
 
-APK는 등록된 이메일이 있으면 제출 확인 뒤 Gmail로 자동 발송하고, 이메일이 비어 있으면 Gmail 임시보관함에만 저장합니다. 사진 선택만으로 발송하지 않습니다.
+### 1. 배포용 keystore를 한 번만 만들기
 
-### GitHub에 올리기
-
-새 저장소를 만든 뒤 이 폴더의 파일을 그대로 올리고, 저장소의 **Actions → Build Android APK → Run workflow**를 실행합니다. 로컬 Git을 쓸 경우에는 저장소 루트에서 다음처럼 올릴 수 있습니다.
+JDK가 설치된 환경에서 저장소 루트에서 실행합니다. 비밀번호는 직접 정하고 안전하게 보관하세요.
 
 ```powershell
-git init -b main
-git add .
-git commit -m "Build Android expense mail app with Gmail automation"
-git remote add origin https://github.com/<계정>/<저장소>.git
-git push -u origin main
+keytool -genkeypair -v -keystore android/release.keystore -alias expense-mail -keyalg RSA -keysize 2048 -validity 10000
 ```
 
-`google-services.json`, 액세스 토큰, 키스토어와 APK는 `.gitignore`로 제외되어 있습니다. 새 저장소는 개인용으로 시작하는 것을 권장합니다.
+이 keystore는 앱 업데이트에도 계속 필요합니다. 분실하거나 새 keystore로 바꾸면 기존 설치 위에 업데이트할 수 없으므로 암호와 파일을 별도로 백업하세요. `android/release.keystore`는 `.gitignore`에 포함되어 있습니다.
 
-## Android Gmail OAuth 설정
+### 2. Google Cloud에 release APK 등록하기
 
-1. Google Cloud에서 Gmail API를 활성화하고 OAuth 동의 화면에 사용할 본인 계정을 테스트 사용자로 추가합니다.
-2. Android OAuth 클라이언트를 패키지명 `com.expensemail.android`와 APK 서명 SHA-1으로 등록합니다.
-3. APK를 처음 실행해 Google 계정과 Gmail 발송·초안 작성 권한을 승인합니다.
-4. GitHub에는 OAuth 토큰, 키스토어, `google-services.json`을 올리지 않습니다. 현재 workflow는 개인 설치용 debug APK를 빌드합니다.
+```powershell
+keytool -list -v -keystore android/release.keystore -alias expense-mail
+```
 
+출력된 `SHA1` 값을 Google Cloud의 Android OAuth 클라이언트에 등록합니다.
+
+- 패키지명: `com.expensemail.android`
+- 인증서 SHA-1: 위 명령으로 확인한 release keystore의 `SHA1`
+- Gmail API를 활성화하고, OAuth 동의 화면의 테스트 사용자에 사용할 Google 계정을 추가
+
+debug keystore의 SHA-1과 release keystore의 SHA-1은 다릅니다. release APK에서 Google 권한 화면이 실패하면 가장 먼저 패키지명과 release SHA-1 등록을 확인하세요.
+
+### 3. GitHub Secrets 설정하기
+
+GitHub 저장소의 **Settings → Secrets and variables → Actions → New repository secret**에서 아래 네 가지 Secret을 만듭니다.
+
+| Secret 이름 | 값 |
+| --- | --- |
+| `ANDROID_KEYSTORE_BASE64` | `release.keystore` 파일 전체를 Base64로 인코딩한 값 |
+| `ANDROID_KEYSTORE_PASSWORD` | keystore 생성 시 사용한 비밀번호 |
+| `ANDROID_KEY_ALIAS` | `expense-mail` |
+| `ANDROID_KEY_PASSWORD` | alias 키 생성 시 사용한 비밀번호 |
+
+PowerShell에서는 keystore 내용을 파일로 남기지 않고 클립보드로 복사할 수 있습니다.
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes('android/release.keystore')) | Set-Clipboard
+```
+
+`ANDROID_KEYSTORE_BASE64`에는 클립보드 값을 붙여 넣습니다. keystore, 비밀번호, OAuth 토큰은 GitHub 저장소나 커밋에 올리지 마세요.
+
+### 4. release APK 만들기
+
+1. 변경 사항을 GitHub 저장소의 `main` 브랜치에 push합니다.
+2. 저장소에서 **Actions → Build Android APK → Run workflow**를 선택합니다.
+3. 실행이 끝나면 workflow 요약의 **Artifacts → `expense-mail-release-apk`**를 다운로드합니다.
+4. 압축을 풀고 `app-release.apk`를 Android 휴대폰으로 전달합니다.
+5. Google Play 외부 설치이므로 Android 설정에서 사용하는 파일 관리자 또는 브라우저에 **알 수 없는 앱 설치** 권한을 허용한 뒤 APK를 설치합니다.
+
+이 APK는 `recipient`에 유효한 이메일이 있으면 확인 후 Gmail로 발송하고, 비워 두면 확인 후 발송하지 않는 Gmail 임시보관함 초안을 만듭니다. 사진을 선택하는 것만으로는 발송하지 않습니다.
+
+### 로컬에서 release APK 만들기
+
+로컬 Android SDK와 Gradle 8.9가 있는 경우 `android/keystore.properties.example`을 복사해 `android/keystore.properties`를 만들고 실제 값을 입력한 뒤 실행합니다.
+
+```powershell
+Copy-Item android/keystore.properties.example android/keystore.properties
+gradle -p android assembleRelease --no-daemon
+```
+
+생성물은 `android/app/build/outputs/apk/release/app-release.apk`입니다. 서명 값이 없는 상태에서 `assembleRelease`를 실행하면 안전을 위해 빌드가 실패합니다. debug 빌드는 서명 Secret 없이 기존처럼 실행할 수 있습니다.
 ## Gmail 연결
 
 1. https://script.google.com/home 에 발송할 계정으로 로그인하고 새 프로젝트를 만듭니다.

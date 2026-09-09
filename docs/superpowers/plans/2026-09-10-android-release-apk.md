@@ -30,7 +30,7 @@
 - Consumes: the Android Gradle module, workflow, and documentation files.
 - Produces: assertions that require a release signing configuration, a local properties example, four CI secret names, and a release APK artifact.
 
-- [ ] **Step 1: Write the failing assertions**
+- [x] **Step 1: Write the failing assertions**
 
 Add tests with these exact behaviors:
 
@@ -61,7 +61,7 @@ test('GitHub Actions builds and uploads a signed release APK',()=>{
 });
 ```
 
-- [ ] **Step 2: Run the focused test and verify it fails**
+- [x] **Step 2: Run the focused test and verify it fails**
 
 Run: `npm test -- tests/android-contract.test.cjs`
 
@@ -78,7 +78,7 @@ Expected: FAIL because the current Gradle module and workflow only describe the 
 - Consumes: optional `android/keystore.properties` with `storeFile`, `storePassword`, `keyAlias`, and `keyPassword`; CI environment variables `ANDROID_KEYSTORE_PATH`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
 - Produces: a `release` build type signed when all four values exist, with debug builds unaffected.
 
-- [ ] **Step 1: Add the ignored local signing paths**
+- [x] **Step 1: Add the ignored local signing paths**
 
 Add these lines to `.gitignore` under the credentials section:
 
@@ -87,7 +87,7 @@ android/keystore.properties
 android/release.keystore
 ```
 
-- [ ] **Step 2: Add the safe example properties file**
+- [x] **Step 2: Add the safe example properties file**
 
 Create `android/keystore.properties.example` with placeholders only:
 
@@ -98,7 +98,7 @@ keyAlias=expense-mail
 keyPassword=CHANGE_ME
 ```
 
-- [ ] **Step 3: Implement lazy signing-value loading**
+- [x] **Step 3: Implement lazy signing-value loading**
 
 In `android/app/build.gradle.kts`, load the optional root-project `keystore.properties` file, then fall back to the four environment variables. Compute `hasReleaseSigning` only when all values are non-blank. Detect `assembleRelease` in `gradle.startParameter.taskNames` and throw:
 
@@ -108,7 +108,7 @@ Release signing is required. Create android/keystore.properties or provide ANDRO
 
 when release assembly is requested without complete values. Create the `release` signing config and attach it to `buildTypes.release` only when the values are complete; leave the existing `debug` build unmodified.
 
-- [ ] **Step 4: Run focused contract coverage**
+- [x] **Step 4: Run focused contract coverage**
 
 Run: `npm test -- tests/android-contract.test.cjs`
 
@@ -123,19 +123,19 @@ Expected: PASS for the new signing configuration and example file.
 - Consumes: GitHub repository secrets `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
 - Produces: `expense-mail-release-apk` containing `android/app/build/outputs/apk/release/app-release.apk`.
 
-- [ ] **Step 1: Add the keystore restoration step**
+- [x] **Step 1: Add the keystore restoration step**
 
 Restore the base64 secret into `$RUNNER_TEMP/expense-mail-release.keystore`, set file permissions to owner-only, and fail with a clear message if any required secret is empty.
 
-- [ ] **Step 2: Build the signed release variant**
+- [x] **Step 2: Build the signed release variant**
 
 Keep the existing Android unit test command, then run `gradle -p android assembleRelease --no-daemon` with the keystore path and the three signing values mapped to the environment names consumed by Gradle.
 
-- [ ] **Step 3: Upload the release APK**
+- [x] **Step 3: Upload the release APK**
 
 Upload only `android/app/build/outputs/apk/release/app-release.apk` with artifact name `expense-mail-release-apk`. Keep `permissions: contents: read`.
 
-- [ ] **Step 4: Run the focused contract coverage**
+- [x] **Step 4: Run the focused contract coverage**
 
 Run: `npm test -- tests/android-contract.test.cjs`
 
@@ -151,11 +151,11 @@ Expected: PASS with the release workflow declarations present.
 - Consumes: the final Gradle and workflow configuration.
 - Produces: exact instructions for generating a keystore, deriving SHA-1, setting GitHub Secrets, running the workflow, downloading the APK, and installing it.
 
-- [ ] **Step 1: Rewrite the Android build section**
+- [x] **Step 1: Rewrite the Android build section**
 
 Explain the difference between debug testing and signed release distribution, name the `expense-mail-release-apk` artifact, and state that the APK must be installed with “unknown app” permission enabled when distributed outside Google Play.
 
-- [ ] **Step 2: Add keystore and OAuth setup commands**
+- [x] **Step 2: Add keystore and OAuth setup commands**
 
 Document this command with user-selected passwords:
 
@@ -171,11 +171,11 @@ keytool -list -v -keystore android/release.keystore -alias expense-mail
 
 State that the output SHA-1 belongs in the Google Cloud Android OAuth client for package `com.expensemail.android`.
 
-- [ ] **Step 3: Add GitHub Actions secret mapping**
+- [x] **Step 3: Add GitHub Actions secret mapping**
 
 Document base64 encoding for PowerShell and the exact four secret names; explicitly warn not to commit the resulting keystore or passwords.
 
-- [ ] **Step 4: Update project design notes**
+- [x] **Step 4: Update project design notes**
 
 Record that release signing is externalized and that the release OAuth SHA-1 must match the distribution keystore.
 
@@ -185,25 +185,25 @@ Record that release signing is externalized and that the release OAuth SHA-1 mus
 - Test: `tests/*.test.cjs`
 - Inspect: `git diff --check`, tracked credential paths, and Android build availability.
 
-- [ ] **Step 1: Run all Node tests**
+- [x] **Step 1: Run all Node tests**
 
 Run: `npm test`
 
 Expected: all tests pass with zero failures.
 
-- [ ] **Step 2: Run JavaScript and manifest checks**
+- [x] **Step 2: Run JavaScript and manifest checks**
 
 Run: `npm run check`
 
 Expected: `Server, browser JavaScript and manifest syntax OK`.
 
-- [ ] **Step 3: Check the Android build toolchain**
+- [x] **Step 3: Check the Android build toolchain**
 
 Run: `Get-Command gradle -ErrorAction SilentlyContinue; Get-Command adb -ErrorAction SilentlyContinue; Test-Path android/local.properties`
 
 If Gradle and the Android SDK are available, run `gradle -p android testDebugUnitTest --no-daemon`, create a temporary test keystore outside the repository, and run `gradle -p android assembleRelease --no-daemon` with temporary environment values. Otherwise, report that GitHub Actions is the release-build verification path.
 
-- [ ] **Step 4: Verify repository hygiene**
+- [x] **Step 4: Verify repository hygiene**
 
 Run: `git diff --check; git status --short; git ls-files '*.keystore' '*.jks' '*.apk' '*.aab'`
 

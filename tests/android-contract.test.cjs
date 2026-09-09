@@ -45,3 +45,28 @@ test('GitHub Actions publishes an installable debug APK artifact',()=>{
   assert.match(workflow,/assembleDebug/);
   assert.match(workflow,/app-debug\.apk/);
 });
+
+test('Android release build has a repository-safe signing path',()=>{
+  const gradle=read('android/app/build.gradle.kts');
+  const example=read('android/keystore.properties.example');
+  assert.match(gradle,/signingConfigs/);
+  assert.match(gradle,/keystore\.properties/);
+  assert.match(gradle,/ANDROID_KEYSTORE_PATH/);
+  assert.match(gradle,/assembleRelease/);
+  assert.match(example,/storeFile=/);
+  assert.match(example,/storePassword=/);
+  assert.match(example,/keyAlias=/);
+  assert.match(example,/keyPassword=/);
+  assert.doesNotMatch(example,/actual|secret-value/i);
+});
+
+test('GitHub Actions builds and uploads a signed release APK',()=>{
+  const workflow=read('.github/workflows/android-apk.yml');
+  assert.match(workflow,/ANDROID_KEYSTORE_BASE64/);
+  assert.match(workflow,/ANDROID_KEYSTORE_PASSWORD/);
+  assert.match(workflow,/ANDROID_KEY_ALIAS/);
+  assert.match(workflow,/ANDROID_KEY_PASSWORD/);
+  assert.match(workflow,/assembleRelease/);
+  assert.match(workflow,/app-release\.apk/);
+  assert.match(workflow,/expense-mail-release-apk/);
+});

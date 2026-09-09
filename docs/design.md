@@ -9,3 +9,7 @@
 메일 발송 요청 ID와 내용 해시를 기록하고 잠금 안에서 발송한다. 이미 성공한 동일 요청은 기록된 결과를 돌려준다. 결과가 불확실하면 자동 재전송하지 않는다. 잘못된 주소, 줄바꿈 헤더 주입, 빈 사진, 손상된 Base64, 형식 위조, 용량 초과를 서버에서 차단한다.
 
 로컬 웹 미리보기는 사진과 메일 편집만 지원하며 연결 상태를 명확히 표시하고 발송을 허용하지 않는다. Android APK는 Google 로그인을 제출 시점에 요청하고 Gmail OAuth 토큰을 메모리에만 둔다. 실제 계정 연결과 배포는 Google 로그인이 필요하다. 자동 발송은 사용자가 제출 확인을 누른 뒤에만 수행한다.
+
+## Android release distribution
+
+The Android app keeps debug builds available for development, while direct distribution uses a signed release APK. The release signing configuration reads `android/keystore.properties` locally or `ANDROID_KEYSTORE_PATH`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD` in CI. The keystore and properties file are ignored by Git. GitHub Actions restores a base64-encoded keystore from repository Secrets, builds `app-release.apk`, and uploads it as `expense-mail-release-apk`. The Google Cloud Android OAuth client must use package `com.expensemail.android` and the SHA-1 fingerprint of this same release keystore.

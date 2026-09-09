@@ -9,6 +9,8 @@ android/local.properties
 google-services.json
 *.jks
 *.keystore
+android/keystore.properties
+android/release.keystore
 
 # Generated APKs
 *.apk
