@@ -74,10 +74,20 @@ PowerShell에서는 keystore 내용을 파일로 남기지 않고 클립보드�
 1. 변경 사항을 GitHub 저장소의 `main` 브랜치에 push합니다.
 2. 저장소에서 **Actions → Build Android APK → Run workflow**를 선택합니다.
 3. 실행이 끝나면 workflow 요약의 **Artifacts → `expense-mail-release-apk`**를 다운로드합니다.
-4. 압축을 풀고 `app-release.apk`를 Android 휴대폰으로 전달합니다.
-5. Google Play 외부 설치이므로 Android 설정에서 사용하는 파일 관리자 또는 브라우저에 **알 수 없는 앱 설치** 권한을 허용한 뒤 APK를 설치합니다.
 
-이 APK는 `recipient`에 유효한 이메일이 있으면 확인 후 Gmail로 발송하고, 비워 두면 확인 후 발송하지 않는 Gmail 임시보관함 초안을 만듭니다. 사진을 선택하는 것만으로는 발송하지 않습니다.
+`expense-mail-debug-apk`는 개발·테스트용이고, 다른 사람에게 전달할 파일은 반드시 `expense-mail-release-apk`의 `app-release.apk`를 사용하세요.
+
+### 5. Android 휴대폰에 설치하기
+
+1. 다운로드한 artifact 압축을 풀어 `app-release.apk` 파일을 준비합니다.
+2. APK를 USB, 메신저, 클라우드 저장소 등으로 Android 휴대폰에 전달합니다.
+3. APK를 여는 데 사용할 파일 관리자 또는 브라우저에 대해 Android 설정의 **알 수 없는 앱 설치** 권한을 허용합니다. 제조사에 따라 **설정 → 보안 및 개인정보 보호 → 알 수 없는 앱 설치** 등의 이름으로 표시됩니다.
+4. `app-release.apk`를 탭하고 **설치**를 누릅니다.
+5. 설치가 끝나면 **출장비 보내기**를 실행합니다. 처음 메일을 제출할 때 Google 계정 선택과 Gmail 발송·초안 작성 권한 승인이 표시됩니다.
+
+설치 후에는 사진을 선택하고 정산 월·제목·내용을 확인한 뒤 제출합니다. 받는 이메일이 있으면 확인 후 Gmail로 발송하고, 비워 두면 발송하지 않는 Gmail 임시보관함 초안을 만듭니다. 사진을 선택하는 것만으로는 발송하지 않습니다.
+
+같은 앱을 업데이트할 때는 반드시 동일한 release keystore로 빌드해야 합니다. 다른 keystore로 만든 APK는 기존 설치 위에 업데이트할 수 없습니다.
 
 ### 로컬에서 release APK 만들기
 
@@ -89,6 +99,7 @@ gradle -p android assembleRelease --no-daemon
 ```
 
 생성물은 `android/app/build/outputs/apk/release/app-release.apk`입니다. 서명 값이 없는 상태에서 `assembleRelease`를 실행하면 안전을 위해 빌드가 실패합니다. debug 빌드는 서명 Secret 없이 기존처럼 실행할 수 있습니다.
+
 ## Gmail 연결
 
 1. https://script.google.com/home 에 발송할 계정으로 로그인하고 새 프로젝트를 만듭니다.
