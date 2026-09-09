@@ -1,0 +1,20 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gmail 연결 안내 · 출장비 보내기</title>
+<style>body{font:16px/1.8 'Malgun Gothic',sans-serif;color:#19232d;max-width:780px;margin:40px auto;padding:0 22px}h1{color:#16654f}h2{font-size:20px;margin-top:32px}button,a{color:#16654f}button{padding:10px 18px;border:1px solid #ccd6de;background:white;border-radius:6px;cursor:pointer;font:inherit}pre{padding:18px;background:#f4f7f6;white-space:pre-wrap;max-height:250px;overflow:auto;font-size:12px}li{margin:10px 0}.note{background:#f0f7f3;padding:16px;border-radius:8px}#status{min-height:24px}</style>
+<h1>Gmail 연결 안내</h1><p>한 번 설치하면 휴대폰에서 앱 주소를 열어 사진을 첨부하고 메일을 보낼 수 있습니다.</p><p class="note">현재 로컬 화면은 미리보기입니다. 아래 설치와 Google 권한 승인을 마친 웹앱에서 실제 발송할 수 있습니다.</p>
+<ol><li><a href="https://script.google.com/home" target="_blank" rel="noopener">Google Apps Script</a>에 발송할 계정으로 로그인한 뒤 <b>새 프로젝트</b>를 만드세요. 이름은 <b>출장비 보내기</b>로 정합니다.</li>
+<li>기본 <b>Code.gs</b>의 내용을 모두 지우고 아래 Code.gs 내용을 붙여 넣으세요.</li>
+<li>파일 옆 <b>＋ → HTML</b>로 <b>Index</b> 파일을 만들고 아래 Index.html 내용을 붙여 넣으세요.</li>
+<li><b>프로젝트 설정 → 편집기에 appsscript.json 매니페스트 파일 표시</b>를 켜고, 편집기로 돌아와 appsscript.json 내용을 아래 내용으로 교체하세요. 저장합니다.</li>
+<li><b>배포 → 새 배포 → 유형: 웹 앱</b>을 선택하세요. <b>실행 사용자: 나</b>, <b>액세스 권한: 나만</b>으로 설정하고 배포합니다.</li>
+<li>Google 권한 화면에서 발송 계정을 확인하고 <b>이메일 발송</b>, <b>초안 작성</b>, <b>계정 이메일 주소 확인</b> 권한을 승인하세요. 계정 정책에 따라 관리자 승인이 필요할 수 있습니다.</li>
+<li>생성된 <b>웹 앱 URL</b>을 Android Chrome에서 열어 수신 이메일을 입력하고 <b>주소 저장</b>을 누릅니다. <b>카메라로 촬영</b> 또는 <b>갤러리에서 선택</b>으로 사진을 올릴 수 있습니다. 발송하지 않고 확인하려면 <b>테스트 초안 저장</b>을 누르고, 실제 발송할 때는 <b>Gmail로 보내기 → 확인하고 보내기</b>를 누르면 됩니다.</li></ol>
+<p>Gmail 서비스는 매니페스트에 포함되어 있습니다. 테스트 초안 저장에는 Gmail 초안 작성 권한이 추가로 필요합니다. 별도의 표준 Google Cloud 프로젝트를 연결한 경우 해당 프로젝트에서 Gmail API도 활성화해야 합니다. 개인 기본 프로젝트는 Apps Script 고급 서비스 설정을 사용합니다.</p>
+<p id="status" role="status"></p><div id="sources"></div>
+<p class="note">Android Chrome에서 메뉴 → <b>홈 화면에 추가</b>를 선택하면 앱처럼 바로 열 수 있습니다. Gmail 연동은 웹앱 배포 후 본인 계정으로 권한을 승인해야 활성화됩니다.</p>
+<h2>사용할 때 알아둘 점</h2><ul><li>JPG/PNG 원본을 최대 30장, 합계 18 MB까지 첨부합니다.</li><li>사진은 새로고침하면 지워집니다. Gmail에 저장한 초안과 보낸 첨부는 Gmail에 남습니다.</li><li><b>테스트 초안 저장</b>은 Gmail 임시보관함에만 저장하며 발송하지 않습니다.</li><li>발송 결과가 불명확하다고 표시되면 먼저 Gmail 보낸편지함을 확인하세요. 앱은 자동으로 재발송하지 않습니다.</li><li>수신자 주소는 Google 계정의 앱 설정에 저장됩니다. 받은편지함 읽기 권한은 요청하지 않습니다.</li><li>Google의 발송 제한 및 회사 계정 정책이 적용됩니다.</li></ul>
+<script>
+for(const name of ['Code.gs','Index.html','appsscript.json']){
+  const h=document.createElement('h2');h.textContent=name;const b=document.createElement('button');b.textContent=name+' 복사';const pre=document.createElement('pre');pre.textContent='불러오는 중…';document.getElementById('sources').append(h,b,pre);
+  fetch('/code/'+name).then(r=>{if(!r.ok)throw Error();return r.text();}).then(code=>{pre.textContent=code;b.onclick=async()=>{try{await navigator.clipboard.writeText(code);document.getElementById('status').textContent=name+' 내용을 복사했습니다.';}catch(e){document.getElementById('status').textContent='복사할 내용을 직접 선택해 복사해 주세요.';}};}).catch(()=>{pre.textContent='파일을 불러올 수 없습니다.';});
+}
+</script></html>

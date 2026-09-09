@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#16654f"><meta name="mobile-web-app-capable" content="yes">
+  <base target="_top"><title>출장비 보내기</title>
+  <style>
+    :root{color-scheme:light;--green:#16654f;--ink:#19232d;--muted:#6f7b89;--line:#d8e0e6;--soft:#f5f8f7}
+    *{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}body{margin:0;background:#fff;color:var(--ink);font:16px/1.6 "Segoe UI","Malgun Gothic",Arial,sans-serif}button,input,textarea{font:inherit}button,a,input,textarea{outline-offset:4px}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}a{color:var(--green)}
+    header{height:80px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5%;gap:16px;min-width:0}.brand{font-size:27px;font-weight:800;color:var(--green);letter-spacing:-1px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 auto}.connection{border:1px solid var(--line);border-radius:7px;background:#fff;padding:9px 17px;font-size:15px;font-weight:600;max-width:50%;min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.connection span{color:var(--green);margin-right:8px}
+    main{max-width:1320px;width:100%;padding:0 32px;margin:auto}.intro{text-align:center;padding:47px 0 38px}.intro h1{font-size:44px;line-height:1.3;letter-spacing:-2px;margin:6px 0 13px;font-weight:800;max-width:100%;overflow-wrap:anywhere}.intro h1 em{font-style:normal;color:var(--green)}.intro p{font-size:21px;color:#56616e;margin:0}.workspace{display:grid;grid-template-columns:1.45fr 1fr;gap:24px;align-items:stretch;width:100%}.panel{border:1px solid var(--line);border-radius:8px;padding:26px;min-width:0;width:100%;overflow:hidden}h2{font-size:22px;line-height:1.4;letter-spacing:-.6px;margin:0 0 22px}.upload-panel{display:flex;flex-direction:column}.dropzone{border:2px dashed var(--line);border-radius:7px;min-height:440px;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:32px 18px;transition:background .18s,border-color .18s}.dropzone.dragging{background:var(--soft);border-color:var(--green)}.dropzone svg{width:70px;height:70px;stroke:#a1abb4;margin-bottom:26px}.dropzone strong{font-size:19px;letter-spacing:-.5px}.dropzone p{color:var(--muted);margin:7px 0 28px;font-size:15px}.primary{color:#fff;background:var(--green);border:1px solid var(--green);border-radius:6px;padding:12px 28px;font-weight:700;transition:background .15s}.primary:hover:not(:disabled){background:#0e503d}.secondary{background:#fff;border:1px solid var(--line);border-radius:6px;padding:9px 16px;color:var(--ink)}.text-button{border:0;background:none;padding:4px;color:var(--green);font-size:14px;text-decoration:underline}
+    .form{display:grid;gap:19px}label{display:block;font-size:15px;font-weight:600;margin:0 0 6px}input,textarea{border:1px solid #ccd6de;border-radius:6px;padding:10px 13px;width:100%;color:var(--ink);background:#fff;min-width:0}input::placeholder{color:#96a1ad}input:focus,textarea:focus{outline:2px solid #16654f55;border-color:var(--green)}textarea{resize:vertical;min-height:96px;line-height:1.65}.recipient-label{display:flex;align-items:center;justify-content:space-between;gap:12px}.recipient-label label{margin:0}.form .primary,.form .draft-button{width:100%;margin-top:1px}.draft-button{padding:10px 16px}.hint{font-size:12px;color:var(--muted);margin:6px 0 0}.footnote{text-align:center;color:var(--muted);font-size:13px;padding:26px 0 18px}.status{border-radius:6px;padding:12px 15px;font-size:14px;background:var(--soft);margin:0 0 18px;overflow-wrap:anywhere}.status.error{background:#fff2ef;color:#973a28}.status.success{background:#eaf6ef;color:var(--green)}[hidden]{display:none!important}
+    .files{display:grid;gap:10px;margin-top:18px}.file{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;min-width:0}.file img{height:64px;width:64px;object-fit:cover;background:var(--soft);border-radius:5px;cursor:zoom-in}.file-info{flex:1;min-width:0}.file-name{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file-size{font-size:12px;color:var(--muted)}.remove{border:0;background:#f4f6f6;border-radius:50%;width:32px;height:32px;font-size:22px;color:#68737d}.file-summary{font-size:13px;color:var(--muted);margin-top:14px}.has-files .dropzone{min-height:160px;flex:0;padding:22px}.has-files .dropzone svg{display:none}.has-files .dropzone p{margin-bottom:14px}.has-files .dropzone strong{font-size:16px}
+    dialog{border:1px solid var(--line);border-radius:12px;padding:28px;width:min(540px,calc(100% - 32px));max-height:85dvh;overflow:auto;color:var(--ink)}dialog::backdrop{background:#172c2566}dialog h2{margin-bottom:15px}dialog p{font-size:14px;color:#56616e}dialog pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--soft);padding:16px;border-radius:6px;font:14px/1.7 inherit}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}#photoDialog{width:min(900px,calc(100% - 28px))}#largePhoto{display:block;max-width:100%;max-height:65dvh;object-fit:contain;margin:auto}.connection-note{font-size:13px;color:var(--muted);margin:15px 0 0}.setup-link{display:inline-block;margin-top:8px}
+    @media(min-width:1500px){main{max-width:1380px}.intro{padding-top:55px;padding-bottom:42px}.intro h1{font-size:50px}.dropzone{min-height:475px}}
+    @media(max-width:740px){header{height:68px;padding:0 20px}.brand{font-size:21px}.connection{font-size:12px;padding:8px 9px;flex-basis:42%;max-width:42%}main{padding:0 20px}.intro{padding:32px 0 25px}.intro h1{font-size:30px;letter-spacing:-1.3px;max-width:330px;margin:0 auto 10px}.intro p{font-size:15px}.workspace{grid-template-columns:1fr;gap:18px}.panel{padding:20px}h2{font-size:19px;margin-bottom:17px}.dropzone{min-height:240px;padding:25px 14px}.dropzone svg{width:48px;height:48px;margin-bottom:17px}.dropzone strong{font-size:16px}.dropzone p{font-size:13px;margin-bottom:21px}.form{gap:17px}input,textarea{font-size:16px}.footnote{padding:22px 0}.actions{flex-wrap:wrap}.actions button{flex:1}}
+    @media(max-width:740px){header{height:calc(68px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 20px 0}main{padding:0 20px calc(24px + env(safe-area-inset-bottom))}.upload-actions{max-width:none}.actions button{min-height:44px}}
+    .upload-actions{display:flex;gap:10px;width:100%;max-width:390px}.upload-actions button{flex:1;min-height:46px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    @media(max-width:740px){.upload-actions{max-width:none}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <header><div class="brand">출장비 보내기</div><button class="connection" id="connect" type="button"><span aria-hidden="true">G</span><b id="connectionText">Gmail 연결</b></button></header>
+  <main>
+    <section class="intro"><h1>사진만 올리면, <em>정산 준비 끝.</em></h1><p>출장 증빙을 모아 Gmail로 보내거나 테스트 초안으로 저장하세요.</p></section>
+    <div id="status" class="status" role="status" aria-live="polite" hidden></div>
+    <div class="workspace">
+      <section class="panel upload-panel" id="uploadPanel" aria-labelledby="photoTitle">
+        <h2 id="photoTitle">증빙 사진</h2>
+        <div class="dropzone" id="dropzone">
+          <svg viewBox="0 0 72 72" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M36 45V12M22 26l14-14 14 14M14 45v12a5 5 0 005 5h34a5 5 0 005-5V45"/></svg>
+          <strong>사진을 끌어 놓거나 선택하세요</strong><p>JPG, PNG · 전체 18 MB까지 · 최대 30장</p>
+          <div class="upload-actions"><button type="button" class="primary" id="camera">카메라로 촬영</button><button type="button" class="secondary" id="choose">갤러리에서 선택</button></div>
+          <input type="file" id="cameraInput" accept="image/jpeg,image/png,.jpg,.jpeg,.png" capture="environment" hidden>
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple hidden>
+        </div>
+        <div class="files" id="files"></div><div class="file-summary" id="fileSummary" hidden></div>
+      </section>
+      <section class="panel" aria-labelledby="mailTitle">
+        <h2 id="mailTitle">메일 미리보기</h2>
+        <form class="form" id="mailForm">
+          <div><label for="month">정산 월</label><input id="month" type="month" required min="2000-01" max="2099-12"></div>
+          <div><div class="recipient-label"><label for="recipient">받는 이메일</label><button class="text-button" id="saveRecipient" type="button">주소 저장</button></div><input id="recipient" type="email" placeholder="name@company.com" autocomplete="email" required maxlength="254"><p class="hint" id="savedHint">자주 보내는 주소를 저장해 두세요.</p></div>
+          <div><label for="subject">제목</label><input id="subject" type="text" required maxlength="150"></div>
+          <div><label for="body">내용</label><textarea id="body" required maxlength="5000"></textarea></div>
+          <button class="primary" id="reviewButton" type="submit" disabled>Gmail로 보내기</button>
+          <button class="secondary draft-button" id="draftButton" type="button" disabled>테스트 초안 저장</button>
+        </form>
+        <p class="connection-note" id="connectionNote">Gmail 연결 상태를 확인하고 있습니다.</p>
+      </section>
+    </div>
+    <footer class="footnote">사진 원본을 첨부하여 발송하거나 테스트 초안으로 저장합니다.</footer>
+  </main>
+  <dialog id="reviewDialog" aria-labelledby="reviewTitle"><h2 id="reviewTitle">이 내용으로 보낼까요?</h2><p id="reviewRecipient"></p><pre id="reviewContent"></pre><p id="reviewFiles"></p><p id="reviewModeNote"></p><div class="actions"><button class="secondary" id="cancelSend" type="button">돌아가기</button><button class="primary" id="confirmSend" type="button">확인하고 보내기</button></div></dialog>
+  <dialog id="setupDialog" aria-labelledby="setupTitle"><h2 id="setupTitle">Gmail 연결하기</h2><p id="setupDescription">현재는 화면 미리보기입니다. 본인 Google 계정에 앱을 설치하고 초안 저장 또는 메일 발송 권한을 승인하면 사용할 수 있어요.</p><a id="setupLink" class="setup-link" href="/setup" target="_blank" rel="noopener">설치 안내 열기</a><div class="actions"><button class="secondary" id="closeSetup" type="button">닫기</button></div></dialog>
+  <dialog id="photoDialog" aria-label="증빙 사진 원본"><img id="largePhoto" alt="증빙 사진 원본"><div class="actions"><button class="secondary" id="closePhoto" type="button">닫기</button></div></dialog>
+  <script>
+    (()=>{
+      'use strict';
+      const $=id=>document.getElementById(id);
+      const live=typeof google!=='undefined' && !!google.script && !!google.script.run;
+      const state={files:[],connected:false,email:'',busy:false,reading:false,uncertain:false,requestId:null,reviewMode:'send'};
+      const fields=['month','recipient','subject','body'];
+      const message=(text,kind='')=>{ $('status').textContent=text;$('status').className='status '+kind;$('status').hidden=!text; };
+      const rpc=(name,arg)=>new Promise((resolve,reject)=>{if(!live){reject(Error('Gmail 연결이 필요합니다.'));return;}const r=google.script.run.withSuccessHandler(resolve).withFailureHandler(reject);arg===undefined?r[name]():r[name](arg);});
+      const bytes=n=>(n/1000000).toFixed(2)+' MB';
+      const setDefaultMail=()=>{const month=Number($('month').value.split('-')[1]);if(!month)return;$('subject').value=month+'월 출장비 증빙자료';$('body').value=month+'월 출장비 증빙자료입니다.';};
+      const updateControls=()=>{
+        const locked=state.busy||state.reading||state.uncertain;
+        fields.forEach(id=>$(id).disabled=locked);
+        $('camera').disabled=locked;$('choose').disabled=locked;$('cameraInput').disabled=locked;$('fileInput').disabled=locked;
+        $('reviewButton').disabled=locked||!state.files.length||!state.connected;
+        $('draftButton').disabled=locked||!state.files.length||!state.connected;
+        $('saveRecipient').disabled=locked;$('confirmSend').disabled=state.busy;
+        $('files').querySelectorAll('.remove').forEach(el=>el.disabled=locked);
+        $('reviewButton').textContent=state.busy?'Gmail로 보내는 중…':'Gmail로 보내기';
+        $('draftButton').textContent=state.busy?'초안을 저장하는 중…':'테스트 초안 저장';
+      };
+      function renderFiles(){
+        $('files').replaceChildren();
+        state.files.forEach((file,index)=>{
+          const row=document.createElement('div');row.className='file';
+          const image=document.createElement('img');image.src=file.url;image.alt=file.name;image.loading='lazy';image.decoding='async';image.tabIndex=0;image.setAttribute('role','button');image.setAttribute('aria-label',file.name+' 원본 보기');
+          const show=()=>{$('largePhoto').src=file.url;$('photoDialog').showModal();};image.onclick=show;image.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show();}};
+          const info=document.createElement('div');info.className='file-info';
+          const name=document.createElement('div');name.className='file-name';name.textContent=file.name;
+          const size=document.createElement('div');size.className='file-size';size.textContent=bytes(file.size);info.append(name,size);
+          const remove=document.createElement('button');remove.className='remove';remove.type='button';remove.textContent='×';remove.setAttribute('aria-label',file.name+' 삭제');
+          remove.onclick=()=>{if(state.busy||state.reading||state.uncertain)return;URL.revokeObjectURL(file.url);state.files.splice(index,1);state.requestId=null;renderFiles();};row.append(image,info,remove);$('files').append(row);
+        });
+        $('uploadPanel').classList.toggle('has-files',state.files.length>0);
+        $('fileSummary').hidden=!state.files.length;$('fileSummary').textContent=state.files.length+'장 선택 · '+bytes(state.files.reduce((n,f)=>n+f.size,0))+' / 18 MB';updateControls();
+      }
+      async function addFiles(incoming){
+        if(state.busy||state.reading||state.uncertain)return;
+        state.reading=true;updateControls();message('사진을 확인하고 있습니다.');
+        let skipped=0;const errors=[];
+        try{for(const file of incoming){
+          if(!['image/jpeg','image/png'].includes(file.type)){errors.push(file.name+': JPG 또는 PNG로 올려 주세요.');continue;}
+          if(file.size===0||file.size+state.files.reduce((n,f)=>n+f.size,0)>18000000){errors.push(file.name+': 전체 18 MB까지 첨부할 수 있습니다.');continue;}
+          if(state.files.length>=30){errors.push('사진은 최대 30장까지 선택할 수 있습니다.');break;}
+          if(file.name.length>180){errors.push('파일 이름을 180자 이내로 줄여 주세요.');continue;}
+          const buffer=await file.arrayBuffer();
+          const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',buffer))).map(x=>x.toString(16).padStart(2,'0')).join('');
+          if(state.files.some(f=>f.hash===hash)){skipped++;continue;}
+          const url=URL.createObjectURL(file);
+          try{await new Promise((resolve,reject)=>{const img=new Image();img.onload=resolve;img.onerror=()=>reject(Error('이미지를 읽을 수 없습니다.'));img.src=url;});}
+          catch(e){URL.revokeObjectURL(url);errors.push(file.name+': 손상된 사진입니다.');continue;}
+          state.files.push({name:file.name,mimeType:file.type,size:file.size,file,hash,url});state.requestId=null;
+        }}catch(e){errors.push('사진을 읽지 못했습니다. 다시 선택해 주세요.');}
+        finally{state.reading=false;$('cameraInput').value='';$('fileInput').value='';renderFiles();}
+        message(errors.length?errors.join('\n'):skipped?'같은 사진 '+skipped+'장은 중복으로 추가하지 않았습니다.':'사진 '+state.files.length+'장이 준비되었습니다.',errors.length?'error':'');
+      }
+      const now=new Date();$('month').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');setDefaultMail();
+      $('month').addEventListener('change',setDefaultMail);
+      fields.forEach(id=>$(id).addEventListener('input',()=>{state.requestId=null;}));
+      $('camera').onclick=()=>$('cameraInput').click();$('choose').onclick=()=>$('fileInput').click();
+      $('cameraInput').onchange=e=>addFiles(Array.from(e.target.files));$('fileInput').onchange=e=>addFiles(Array.from(e.target.files));
+      ['dragenter','dragover'].forEach(event=>$('dropzone').addEventListener(event,e=>{e.preventDefault();if(!state.busy)$('dropzone').classList.add('dragging');}));
+      ['dragleave','drop'].forEach(event=>$('dropzone').addEventListener(event,e=>{e.preventDefault();$('dropzone').classList.remove('dragging');}));
+      $('dropzone').addEventListener('drop',e=>addFiles(Array.from(e.dataTransfer.files)));
+      $('closeSetup').onclick=()=>$('setupDialog').close();$('closePhoto').onclick=()=>$('photoDialog').close();
+      $('connect').onclick=()=>{$('setupDescription').textContent=state.connected?'현재 '+state.email+' 계정으로 연결되어 있습니다. 이 계정의 Gmail에 테스트 초안을 저장하거나 메일을 보낼 수 있습니다.':live?'Google 권한 또는 로그인을 확인한 뒤 앱을 새로고침해 주세요.':'현재는 화면 미리보기입니다. 본인 Google 계정에 앱을 설치하고 초안 저장 또는 메일 발송 권한을 승인하면 사용할 수 있어요.';$('setupLink').hidden=live;$('setupDialog').showModal();};
+      $('saveRecipient').onclick=async()=>{
+        if(!$('recipient').reportValidity())return;const value=$('recipient').value.trim();
+        try{if(live){const result=await rpc('saveRecipient',value);$('recipient').value=result.recipient;}else{localStorage.setItem('expense-preview-recipient',value);}
+          $('savedHint').textContent=live?'주소가 저장되었습니다.':'이 브라우저 미리보기에 주소가 저장되었습니다.';
+        }catch(e){message(e.message||'주소 저장에 실패했습니다.','error');}
+      };
+      const openReview=mode=>{
+        state.reviewMode=mode;
+        $('reviewTitle').textContent=mode==='draft'?'테스트 초안을 만들까요?':'이 내용으로 보낼까요?';
+        $('reviewRecipient').textContent='받는 사람: '+($('recipient').value.trim()||'비워 둠');
+        $('reviewContent').textContent=$('subject').value+'\n\n'+$('body').value;
+        $('reviewFiles').textContent='첨부 '+state.files.length+'장 · '+state.files.map(f=>f.name).join(', ');
+        $('reviewModeNote').textContent=mode==='draft'?'Gmail 임시보관함에만 저장하며 발송하지 않습니다.':'';
+        $('confirmSend').textContent=mode==='draft'?'Gmail 초안 저장':'확인하고 보내기';
+        $('reviewDialog').showModal();
+      };
+      const validateReviewFields=mode=>{
+        const required=mode==='draft'?['month','subject','body']:fields;
+        return required.every(id=>$(id).reportValidity());
+      };
+      $('mailForm').onsubmit=e=>{
+        e.preventDefault();if(state.busy||state.reading||state.uncertain)return;
+        if(!state.connected){$('setupDialog').showModal();return;}if(!state.files.length){message('사진을 먼저 선택해 주세요.','error');return;}
+        if(!validateReviewFields('send'))return;
+        openReview('send');
+      };
+      $('draftButton').onclick=()=>{
+        if(state.busy||state.reading||state.uncertain)return;
+        if(!state.connected){$('setupDialog').showModal();return;}if(!state.files.length){message('사진을 먼저 선택해 주세요.','error');return;}
+        if(!validateReviewFields('draft'))return;
+        openReview('draft');
+      };
+      $('cancelSend').onclick=()=>$('reviewDialog').close();
+      const readBase64=file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result.split(',')[1]);reader.onerror=()=>reject(Error('사진을 읽지 못했습니다.'));reader.readAsDataURL(file);});
+      $('confirmSend').onclick=async()=>{
+        if(state.busy)return;
+        const mode=state.reviewMode;
+        state.busy=true;$('reviewDialog').close();updateControls();message(mode==='draft'?'사진을 첨부하여 Gmail 임시보관함에 저장하고 있습니다.':'사진을 첨부하여 Gmail로 보내고 있습니다. 창을 닫지 마세요.');
+        let submitted=false;
+        try{
+          state.requestId=state.requestId||crypto.randomUUID();
+          const payload={requestId:state.requestId,month:$('month').value,recipient:$('recipient').value.trim(),subject:$('subject').value,body:$('body').value,files:[]};
+          for(const f of state.files)payload.files.push({name:f.name,mimeType:f.mimeType,base64:await readBase64(f.file)});
+          submitted=true;const result=await rpc(mode==='draft'?'createExpenseDraft':'sendExpense',payload);
+          if(mode==='draft'){
+            message('테스트 초안을 Gmail 임시보관함에 저장했습니다. 발송되지 않았습니다.','success');
+            state.requestId=null;
+          }else{
+            message(result.recipient+'에 증빙 사진 '+result.count+'장을 발송했습니다. Gmail 보낸편지함에서 확인할 수 있습니다.','success');
+            state.files.forEach(f=>URL.revokeObjectURL(f.url));state.files=[];state.requestId=null;renderFiles();
+          }
+        }catch(e){
+          state.uncertain=submitted;
+          const prefix=mode==='draft'?'초안 저장 결과를 확인할 수 없습니다.':'발송 결과를 확인할 수 없습니다.';
+          message((e.message||prefix)+(submitted?' 중복 작업을 막기 위해 진행을 멈췄습니다. Gmail 임시보관함 또는 보낸편지함을 먼저 확인해 주세요.':''),'error');
+        }finally{state.busy=false;updateControls();}
+      };
+      window.addEventListener('beforeunload',e=>{if(state.busy||state.files.length){e.preventDefault();e.returnValue='';}});
+      if(live){rpc('getBootstrap').then(result=>{state.connected=true;state.email=result.email;$('recipient').value=result.recipient;$('connectionText').textContent=result.email;$('connectionNote').textContent='연결된 Gmail 계정으로 초안을 저장하거나 발송합니다.';updateControls();}).catch(e=>{$('connectionNote').textContent='Gmail 연결을 확인해 주세요.';message(e.message||'계정 연결에 실패했습니다.','error');});}
+      else{try{$('recipient').value=localStorage.getItem('expense-preview-recipient')||'';}catch(e){}$('connectionNote').textContent='미리보기 모드 · Gmail 연결 후 초안 저장 또는 발송할 수 있어요.';}
+      updateControls();
+    })();
+  </script>
+</body>
+</html>

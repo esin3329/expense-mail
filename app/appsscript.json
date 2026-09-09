@@ -1,0 +1,8 @@
+{
+  "timeZone": "Asia/Seoul",
+  "dependencies": {"enabledAdvancedServices": [{"userSymbol": "Gmail", "version": "v1", "serviceId": "gmail"}]},
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "oauthScopes": ["https://www.googleapis.com/auth/gmail.send", "https://www.googleapis.com/auth/gmail.compose", "https://www.googleapis.com/auth/userinfo.email"],
+  "webapp": {"executeAs": "USER_DEPLOYING", "access": "MYSELF"}
+}

@@ -1,0 +1,15 @@
+# Android build output and local SDK paths
+.codex-remote-attachments/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+
+# Credentials and signing material
+google-services.json
+*.jks
+*.keystore
+
+# Generated APKs
+*.apk
+*.aab
