@@ -59,9 +59,9 @@
 - `class GmailClient(private val tokenProvider: () -> String)` with blocking `fun send(...)` and `fun createDraft(...)` methods called from the activity's background executor, returning the Gmail message/draft ID.
 
 - [x] **Step 1: Write failing pure Kotlin tests** for Korean UTF-8 text, exactly one `To:` header when present, no `To:` header for drafts, and byte-identical attachments.
-- [ ] **Step 2: Run the Android unit test command in CI-compatible form**; this workstation has no Android SDK or Gradle installation, so the workflow is the execution path.
+- [x] **Step 2: Run the Android unit test command in CI-compatible form**; this workstation has no Android SDK or Gradle installation, so the workflow is the execution path.
 - [x] **Step 3: Implement MIME encoding and REST calls** using platform Base64/JSON and `HttpURLConnection`; make non-2xx or missing IDs terminal errors.
-- [ ] **Step 4: Run the unit tests**; deferred to GitHub Actions because the local Android toolchain is unavailable.
+- [x] **Step 4: Run the unit tests**; verified by GitHub Actions run `34373257166`.
 
 ### Task 3: Android photo and submission UI
 

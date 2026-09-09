@@ -4,7 +4,7 @@
 
 ## 현재 상태
 
-웹앱과 Android APK 소스, Gmail 연동 코드가 구현되어 있습니다. Google 계정 로그인, Gmail OAuth 승인, GitHub Actions APK 빌드와 실발송 검증은 아직 완료되지 않았습니다. 로컬 미리보기와 테스트 초안 경로는 이메일을 보내지 않습니다.
+웹앱과 Android APK 소스, Gmail 연동 코드가 구현되어 있습니다. GitHub Actions의 Android unit test와 installable debug APK 빌드는 `main` 커밋에서 검증되었습니다. Google 계정 로그인, Gmail OAuth 승인, 실제 Gmail 발송은 아직 검증하지 않았습니다. 로컬 미리보기와 테스트 초안 경로는 이메일을 보내지 않습니다.
 
 ## 실행
 
