@@ -39,7 +39,27 @@ jobs:
           name: expense-mail-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+      - name: Check release signing secrets
+        id: release-signing
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            if [[ -z "${!name}" ]]; then missing=1; fi
+          done
+          if [[ "$missing" -eq 0 ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Release APK skipped. Configure all four Android signing Secrets to build it."
+          fi
       - name: Restore release keystore
+        if: steps.release-signing.outputs.configured == 'true'
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -53,6 +73,7 @@ jobs:
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/expense-mail-release.keystore"
           chmod 600 "$RUNNER_TEMP/expense-mail-release.keystore"
       - name: Build signed release APK
+        if: steps.release-signing.outputs.configured == 'true'
         env:
           ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/expense-mail-release.keystore
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -60,6 +81,7 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: gradle -p android assembleRelease --no-daemon
       - name: Upload release APK
+        if: steps.release-signing.outputs.configured == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: expense-mail-release-apk

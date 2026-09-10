@@ -70,3 +70,11 @@ test('GitHub Actions builds and uploads a signed release APK',()=>{
   assert.match(workflow,/app-release\.apk/);
   assert.match(workflow,/expense-mail-release-apk/);
 });
+
+test('GitHub Actions keeps the debug build green when release secrets are absent',()=>{
+  const workflow=read('.github/workflows/android-apk.yml');
+  assert.match(workflow,/id: release-signing/);
+  assert.match(workflow,/configured=true/);
+  assert.match(workflow,/configured=false/);
+  assert.match(workflow,/if: steps\.release-signing\.outputs\.configured == 'true'/);
+});

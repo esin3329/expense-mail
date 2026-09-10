@@ -69,6 +69,8 @@ PowerShell에서는 keystore 내용을 파일로 남기지 않고 클립보드�
 2. 저장소에서 **Actions → Build Android APK → Run workflow**를 선택합니다.
 3. 실행이 끝나면 workflow 요약의 **Artifacts → `expense-mail-release-apk`**를 다운로드합니다.
 
+release Secret이 아직 없으면 workflow는 경고를 남기고 debug APK만 생성합니다. 네 가지 Secret을 설정한 뒤 다시 실행하면 `expense-mail-release-apk`가 생성됩니다.
+
 `expense-mail-debug-apk`는 개발·테스트용이고, 다른 사람에게 전달할 파일은 반드시 `expense-mail-release-apk`의 `app-release.apk`를 사용하세요.
 
 ### 5. Android 휴대폰에 설치하기
