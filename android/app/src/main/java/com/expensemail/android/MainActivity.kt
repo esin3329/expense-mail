@@ -23,6 +23,8 @@ import com.google.android.gms.auth.api.identity.AuthorizationRequest
 import com.google.android.gms.auth.api.identity.AuthorizationResult
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.common.api.Scope
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.CommonStatusCodes
 import java.io.File
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
@@ -166,7 +168,7 @@ class MainActivity : Activity() {
                         if (result.hasResolution()) launchAuthorizationResolution(result)
                         else executePending(result.getAccessToken())
                     } catch (error: Exception) {
-                        cancelPending("Gmail 권한 승인이 완료되지 않았습니다.")
+                        cancelPending(authorizationFailure(error))
                     }
                 }
             }
@@ -336,15 +338,28 @@ class MainActivity : Activity() {
         inFlight = true
         networkStarted = false
         updateUi()
+        val requestedScopes = if (pendingSubmission?.recipient?.isBlank() == true) {
+            listOf(Scope(gmailComposeScope))
+        } else {
+            listOf(Scope(gmailSendScope))
+        }
         val request = AuthorizationRequest.builder()
-            .setRequestedScopes(listOf(Scope(gmailSendScope), Scope(gmailComposeScope)))
+            .setRequestedScopes(requestedScopes)
             .build()
         Identity.getAuthorizationClient(this).authorize(request)
             .addOnSuccessListener { result ->
                 if (result.hasResolution()) launchAuthorizationResolution(result)
                 else executePending(result.getAccessToken())
             }
-            .addOnFailureListener { cancelPending("Google 계정 또는 Gmail 권한을 확인할 수 없습니다.") }
+            .addOnFailureListener { error -> cancelPending(authorizationFailure(error)) }
+    }
+
+    private fun authorizationFailure(error: Exception): String {
+        return when ((error as? ApiException)?.statusCode) {
+            CommonStatusCodes.DEVELOPER_ERROR -> "Google 앱 등록 정보가 맞지 않습니다. Google Cloud에 패키지명 com.expensemail.android와 release APK의 SHA-1을 등록해 주세요."
+            CommonStatusCodes.NETWORK_ERROR -> "인터넷 연결을 확인한 후 다시 시도해 주세요."
+            else -> "Google 계정 또는 Gmail 권한을 확인할 수 없습니다."
+        }
     }
 
     private fun launchAuthorizationResolution(result: AuthorizationResult) {

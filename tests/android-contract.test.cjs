@@ -38,6 +38,12 @@ test('Android submission code branches to Gmail send or draft endpoints',()=>{
   assert.match(activity,/attempt_in_flight/);
 });
 
+test('Android authorization requests only the Gmail scope needed by the chosen action',()=>{
+  const activity=read('android/app/src/main/java/com/expensemail/android/MainActivity.kt');
+  assert.match(activity,/val requestedScopes = if \(pendingSubmission\?\.recipient\?\.isBlank\(\) == true\)/);
+  assert.match(activity,/\.setRequestedScopes\(requestedScopes\)/);
+});
+
 test('GitHub Actions publishes an installable debug APK artifact',()=>{
   const workflow=read('.github/workflows/android-apk.yml');
   assert.match(workflow,/setup-android/);
@@ -77,4 +83,12 @@ test('GitHub Actions keeps the debug build green when release secrets are absent
   assert.match(workflow,/configured=true/);
   assert.match(workflow,/configured=false/);
   assert.match(workflow,/if: steps\.release-signing\.outputs\.configured == 'true'/);
+});
+
+test('Android explains common Google OAuth configuration failures',()=>{
+  const activity=read('android/app/src/main/java/com/expensemail/android/MainActivity.kt');
+  assert.match(activity,/ApiException/);
+  assert.match(activity,/DEVELOPER_ERROR/);
+  assert.match(activity,/com\.expensemail\.android/);
+  assert.match(activity,/SHA-1/);
 });

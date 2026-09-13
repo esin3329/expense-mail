@@ -38,6 +38,8 @@ keytool -list -v -keystore android/release.keystore -alias expense-mail
 
 출력된 `SHA1` 값을 Google Cloud의 Android OAuth 클라이언트에 등록합니다.
 
+현재 배포한 release APK의 SHA-1은 `73:F2:FE:BF:C9:58:39:F6:84:87:54:17:4C:62:DA:B1:4B:2D:DD:77`입니다. Google Cloud의 Android OAuth 클라이언트에 아래 패키지명과 함께 등록하세요.
+
 - 패키지명: `com.expensemail.android`
 - 인증서 SHA-1: 위 명령으로 확인한 release keystore의 `SHA1`
 - Gmail API를 활성화하고, OAuth 동의 화면의 테스트 사용자에 사용할 Google 계정을 추가
