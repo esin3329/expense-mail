@@ -92,3 +92,9 @@ test('Android explains common Google OAuth configuration failures',()=>{
   assert.match(activity,/com\.expensemail\.android/);
   assert.match(activity,/SHA-1/);
 });
+
+test('Android distinguishes a closed authorization screen from a denied authorization',()=>{
+  const activity=read('android/app/src/main/java/com/expensemail/android/MainActivity.kt');
+  assert.match(activity,/if \(data == null\) \{\s*cancelPending\("Google 권한 화면이 닫혔습니다\. 다시 시도해 주세요\."\)/s);
+  assert.match(activity,/if \(resultCode != RESULT_OK\) \{\s*cancelPending\("Gmail 권한이 허용되지 않았습니다\."\)/s);
+});

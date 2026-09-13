@@ -43,8 +43,11 @@ keytool -list -v -keystore android/release.keystore -alias expense-mail
 - 패키지명: `com.expensemail.android`
 - 인증서 SHA-1: 위 명령으로 확인한 release keystore의 `SHA1`
 - Gmail API를 활성화하고, OAuth 동의 화면의 테스트 사용자에 사용할 Google 계정을 추가
+- OAuth 동의 화면의 Data Access에 `https://www.googleapis.com/auth/gmail.send`와 `https://www.googleapis.com/auth/gmail.compose`를 모두 추가
 
 debug keystore의 SHA-1과 release keystore의 SHA-1은 다릅니다. release APK에서 Google 권한 화면이 실패하면 가장 먼저 패키지명과 release SHA-1 등록을 확인하세요.
+
+테스트 초안 저장에서 권한 오류가 나면 받는 이메일을 비운 흐름이 `gmail.compose` 권한을 요청하는지 확인하세요. 앱은 Google 권한 화면을 닫은 경우와 권한 거부·OAuth 설정 오류를 서로 다른 안내로 표시합니다.
 
 ### 3. GitHub Secrets 설정하기
 

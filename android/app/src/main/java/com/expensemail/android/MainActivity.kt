@@ -160,13 +160,18 @@ class MainActivity : Activity() {
             }
             requestGallery -> if (resultCode == RESULT_OK && data != null) ingestUris(extractUris(data))
             requestAuth -> {
-                if (resultCode != RESULT_OK || data == null) {
-                    cancelPending("Gmail 권한 승인이 취소되었습니다.")
+                if (data == null) {
+                    cancelPending("Google 권한 화면이 닫혔습니다. 다시 시도해 주세요.")
                 } else {
                     try {
                         val result = Identity.getAuthorizationClient(this).getAuthorizationResultFromIntent(data)
-                        if (result.hasResolution()) launchAuthorizationResolution(result)
-                        else executePending(result.getAccessToken())
+                        if (resultCode != RESULT_OK) {
+                            cancelPending("Gmail 권한이 허용되지 않았습니다.")
+                        } else if (result.hasResolution()) {
+                            launchAuthorizationResolution(result)
+                        } else {
+                            executePending(result.getAccessToken())
+                        }
                     } catch (error: Exception) {
                         cancelPending(authorizationFailure(error))
                     }
@@ -356,6 +361,7 @@ class MainActivity : Activity() {
 
     private fun authorizationFailure(error: Exception): String {
         return when ((error as? ApiException)?.statusCode) {
+            CommonStatusCodes.CANCELED -> "Google 권한 화면이 닫혔습니다. 다시 시도해 주세요."
             CommonStatusCodes.DEVELOPER_ERROR -> "Google 앱 등록 정보가 맞지 않습니다. Google Cloud에 패키지명 com.expensemail.android와 release APK의 SHA-1을 등록해 주세요."
             CommonStatusCodes.NETWORK_ERROR -> "인터넷 연결을 확인한 후 다시 시도해 주세요."
             else -> "Google 계정 또는 Gmail 권한을 확인할 수 없습니다."
